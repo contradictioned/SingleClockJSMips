@@ -55,6 +55,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 	switch(instr){
 		// Arithmetics ////////////////////////
 		case "add":
+			// add $rd, $rs, $rt  --  $rd <- $rs + $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -64,6 +65,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,0,0,0,0]; // 32
 			break;
 		case "addu":
+			// add $rd, $rs, $rt  --  $rd <- $rs + $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -73,20 +75,23 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,0,0,0,1]; // 33
 			break;
 		case "addi":
+			// add $rt, $rs, immediate  --  $rt <- $rs + immediate
 			this.type = "I";
 			var opcode = [0,0,1,0,0,0]; // 8
 			var rs = decodeRegister(reg2);
 			var rt = decodeRegister(reg1);
-			var immediate = rest;
+			var immediate = decodeImmediate(rest);
 			break;
 		case "addiu":
+			// add $rt, $rs, immediate  --  $rt <- $rs + immediate
 			this.type = "I";
 			var opcode = [0,0,1,0,0,1]; // 9
 			var rs = decodeRegister(reg2);
 			var rt = decodeRegister(reg1);
-			var immediate = rest;
+			var immediate = decodeImmediate(rest);
 			break;
 		case "sub":
+			// sub $rd, $rs, $rt  --  $rd <- $rs - $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -96,6 +101,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,0,0,1,0]; // 34
 			break;
 		case "subu":
+			// sub $rd, $rs, $rt  --  $rd <- $rs - $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -106,6 +112,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			break;
 		// Logical ////////////////////////
 		case "and":
+			// and $rd, $rs, $rt  --  $rd <- $rs & $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -115,13 +122,15 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,0,1,0,0]; // 36
 			break;
 		case "andi":
+			// andi $rt, $rs, immediate  --  $rt <- $rs & immediate
 			this.type = "I";
 			var opcode = [0,0,1,1,0,0]; // 12
 			var rs = decodeRegister(reg2);
 			var rt = decodeRegister(reg1);
-			var immediate = rest;
+			var immediate = decodeImmediate(rest);
 			break;
 		case "or":
+			// or $rd, $rs, $rt  --  $rd <- $rs | $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -131,13 +140,15 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,0,1,0,1]; // 37
 			break;
 		case "ori":
+			// ori $rt, $rs, immediate  --  $rt <- $rs | immediate
 			this.type = "I";
 			var opcode = [0,0,1,1,0,1]; // 13
 			var rs = decodeRegister(reg2);
 			var rt = decodeRegister(reg1);
-			var immediate = rest;
+			var immediate = decodeImmediate(rest);
 			break;
 		case "nor":
+			// nor $rd, $rs, $rt  --  $rd <- !($rs | $rt)
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -147,6 +158,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,0,1,1,1]; // 39
 			break;
 		case "xor":
+			// xor $rd, $rs, $rt  --  $rd <- $rs ⊻ $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -156,14 +168,16 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,0,1,1,0]; // 38
 			break;
 		case "xori":
+			// xori $rt, $rs, immediate  --  $rt <- $rs ⊻ immediate
 			this.type = "I";
 			var opcode = [0,0,1,1,1,0]; // 14
 			var rs = decodeRegister(reg2);
 			var rt = decodeRegister(reg1);
-			var immediate = rest;
+			var immediate = decodeImmediate(rest);
 			break;
 		// Comparison ////////////////////////
 		case "slt":
+			// slt $rd, $rs, $rt  --  $rd = $rs < $rt ? 1 : 0
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -173,6 +187,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,1,0,1,0];
 			break;
 		case "sltu":
+			// sltu $rd, $rs, $rt  --  $rd = $rs < $rt ? 1 : 0
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = decodeRegister(reg2);
@@ -182,119 +197,116 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct = [1,0,1,0,1,1];
 			break;
 		case "slti":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+		  // slti $rt, $rs, immediate -- $rt = $rs < immediate ? 1 : 0
+			this.type = "I";
+			var opcode = [0,0,1,0,1,0]; // 10
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = decodeImmediate(rest);
 			break;
 		case "sltiu":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// slti $rt, $rs, immediate -- $rt = $rs < immediate ? 1 : 0
+			this.type = "I";
+			var opcode = [0,0,1,0,1,1]; // 11
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = decodeImmediaterest);
 			break;
 		// Shift ////////////////////////
 		case "sll":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+		  // sll $rd, $rt, shamt -- $rd <- $rt << shamt
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = [0,0,0,0,0];
+			var rt = decodeRegister(reg2);
+			var rd = decodeRegister(reg1);
+			var shamt = decodeShamt(rest);
+			var funct = [0,0,0,0,0,0];
 			break;
-		case "slv":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+		case "sllv":
+			// sll $rd, $rt, $rs -- $rd <- $rt << $rs
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0]
+			var rs = decodeRegister(reg3);
+			var rt = decodeRegister(reg2);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [0,0,0,1,0,0]; // 4
 			break;
 		case "srl":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// srl $rd, $rt, shamt -- $rd = $rt >> shamt
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rt = decodeRegister(reg2);
+			var rd = decodeRegister(reg1);
+			var shamt =decodeShamt(rest);
+			var funct = [0,0,0,0,1,0]; // 2
 			break;
 		case "sra":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// sra $rd, $rt, shamt -- $rd = $rt >> shamt
+			this.type = "R";
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rt = decodeRegister(reg2);
+			var rd = decodeRegister(reg1);
+			var shamt =decodeShamt(rest);
+			var funct = [0,0,0,0,1,1]; // 3
 			break;
 		case "srlv":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// srlv $rd, $rt, $rs -- $rd <- $rt >> $rs
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0]
+			var rs = decodeRegister(reg3);
+			var rt = decodeRegister(reg2);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [0,0,0,1,1,0]; // 6
 			break;
 		// Branching ////////////////////////
 		case "j":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// j addr -- goto addr*4
+			this.type = "J";
+			var opcode = [0,0,0,0,1,0]; // 2
+			var target = decodeTarget(rest);
 			break;
 		case "jr":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// jr $rs -- goto $rs
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg1);
+			var rt = [0,0,0,0,0];
+			var rd = [0,0,0,0,0];
+			var shamt = [0,0,0,0,0];
+			var funct = [0,0,1,0,0,0]; // 8
 			break;
 		case "jal":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// j addr -- goto addr*4
+			this.type = "J";
+			var opcode = [0,0,0,0,1,1]; // 3
+			var target = decodeTarget(rest);
 			break;
 		case "beq":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// beq $rs, $rt, immediate -- if $rs = $rt goto immediate * 4
+			this.type = "I";
+			var opcode = [0,0,0,1,0,0]; // 4
+			var rs = decodeRegister(reg1);
+			var rt = decodeRegister(reg2);
+			var immediate = decodeImmediate(rest);
 			break;
 		case "bne":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// beq $rs, $rt, immediate -- if $rs != $rt goto immediate * 4
+			this.type = "I";
+			var opcode = [0,0,0,1,0,1]; // 5
+			var rs = decodeRegister(reg1);
+			var rt = decodeRegister(reg2);
+			var immediate = decodeImmediate(rest);
 			break;
 		// Data transport ////////////////////////
 		case "lw":
-			this.type = "";
-			var opcode;
+			// lw $rt, immediate($rs) -- $rt <- MEM[$rs + immediate]
+			// TODO 
+			this.type = "I";
+			var opcode = [1,0,0,0,1,1]; // 35
 			var rs;
 			var rt;
 			var rd;
@@ -302,8 +314,10 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct;
 			break;
 		case "sw":
-			this.type = "";
-			var opcode;
+			// sw $rt, immediate($rs) -- MEM[$rs + immediate] <- $rt
+			// TODO
+			this.type = "I";
+			var opcode = [1,0,1,0,1,1]; // 43
 			var rs;
 			var rt;
 			var rd;
@@ -311,52 +325,70 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var funct;
 			break;
 		case "lui":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+		  // lui $rt, immediate -- $rt <- immediate << 16
+			this.type = "I";
+			var opcode = [0,0,1,1,1,1];
+			var rs = [0,0,0,0,0];
+			var rt = decodeRegister(reg1);
+			var immediate = decodeImmediate(rest);
 			break;
 		case "mfhi":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// mfhi $rd -- $rd <- HI
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = [0,0,0,0,0];
+			var rt = [0,0,0,0,0];
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [0,1,0,0,0,0]; // 16
 			break;
 		case "mflo":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// mflo $rd -- $rd <- LO
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = [0,0,0,0,0];
+			var rt = [0,0,0,0,0];
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [0,1,0,0,1,0]; // 18
 			break;
 		case "mthi":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// mthi $rs -- HI <- $rs
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg1);
+			var rt = [0,0,0,0,0];
+			var rd = [0,0,0,0,0];
+			var shamt = [0,0,0,0,0];
+			var funct = [0,1,0,0,0,1]; // 17
 			break;
 		case "mtlo":
-			this.type = "";
-			var opcode;
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			// mtlo $rs -- LO <- $rs
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg1);
+			var rt = [0,0,0,0,0];
+			var rd = [0,0,0,0,0];
+			var shamt = [0,0,0,0,0];
+			var funct = [0,1,0,0,1,1]; // 19
 			break;
 	}
 
+}
+
+InstructionMemory.prototype.decodeShamt = function(shamt) {
+	var bitVector = shamt.toString(2);
+	bitVector.split("");
+}
+
+InstructionMemory.prototype.decodeImmediate = function(immediate) {
+	var bitVector = immediate.toString(2);
+	bitVector.split("");
+}
+
+InstructionMemory.prototype.decodeTarget = function(immediate) {
+	var bitVector = immediate.toString(2);
+	bitVector.split("");
 }
 
 /**
