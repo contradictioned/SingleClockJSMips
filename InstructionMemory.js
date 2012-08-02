@@ -51,31 +51,310 @@ InstructionMemory.prototype.decode = function(instruction) {
 	console.log("reg3: " + reg3);
 	console.log("rest: " + rest);
 
-	// Arithmetik
-
-	if (instr === "add") {
-		this.type = "R"
-		var opcode = [0,0,0,0,0,0];
-		var rs = decodeRegister(reg2);
-		var rt = decodeRegister(reg3);
-		var rd = decodeRegister(reg1);
-		var shamt = [0,0,0,0,0];
-		var funct = [1,0,0,0,0,0]; // 32
-	}
-	if (instr === "addu") {
-		
-	}
-	if (instr === "addi") {
-		
-	}
-	if (instr === "addiu") {
-		
-	}
-	if (instr === "sub") {
-		
-	}
-	if (instr === "subu") {
-		
+	
+	switch(instr){
+		// Arithmetics ////////////////////////
+		case "add":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,0,0,0,0]; // 32
+			break;
+		case "addu":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,0,0,0,1]; // 33
+			break;
+		case "addi":
+			this.type = "I";
+			var opcode = [0,0,1,0,0,0]; // 8
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = rest;
+			break;
+		case "addiu":
+			this.type = "I";
+			var opcode = [0,0,1,0,0,1]; // 9
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = rest;
+			break;
+		case "sub":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,0,0,1,0]; // 34
+			break;
+		case "subu":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,0,0,1,1]; // 35
+			break;
+		// Logical ////////////////////////
+		case "and":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,0,1,0,0]; // 36
+			break;
+		case "andi":
+			this.type = "I";
+			var opcode = [0,0,1,1,0,0]; // 12
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = rest;
+			break;
+		case "or":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,0,1,0,1]; // 37
+			break;
+		case "ori":
+			this.type = "I";
+			var opcode = [0,0,1,1,0,1]; // 13
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = rest;
+			break;
+		case "nor":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,0,1,1,1]; // 39
+			break;
+		case "xor":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,0,1,1,0]; // 38
+			break;
+		case "xori":
+			this.type = "I";
+			var opcode = [0,0,1,1,1,0]; // 14
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = rest;
+			break;
+		// Comparison ////////////////////////
+		case "slt":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,1,0,1,0];
+			break;
+		case "sltu":
+			this.type = "R";
+			var opcode = [0,0,0,0,0,0];
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg3);
+			var rd = decodeRegister(reg1);
+			var shamt = [0,0,0,0,0];
+			var funct = [1,0,1,0,1,1];
+			break;
+		case "slti":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "sltiu":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		// Shift ////////////////////////
+		case "sll":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "slv":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "srl":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "sra":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "srlv":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		// Branching ////////////////////////
+		case "j":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "jr":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "jal":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "beq":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "bne":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		// Data transport ////////////////////////
+		case "lw":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "sw":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "lui":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "mfhi":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "mflo":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "mthi":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
+		case "mtlo":
+			this.type = "";
+			var opcode;
+			var rs;
+			var rt;
+			var rd;
+			var shamt;
+			var funct;
+			break;
 	}
 
 }
