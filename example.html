@@ -1,12 +1,67 @@
-<html>
+<!DOCTYPE html>
+<html lang="de">
 <head>
+  <meta charset="utf-8">
   <title>Mini-MIPS</title>
+
+  <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 </head>
 <body>
-	<h1>Ein Mini-MIPS</h1>
+	<div class="container">
+		<div class="page-header">
+			<h1>Mini-MIPS Spielwiese</h1>
+		</div>
+		<div class="row">
+			<h2>Assembler in Bitstrings/Bitvektoren</h2>
+			<div class="span6">
+				<p class="well">
+					Hier MIPS-Assembler eingeben:<br />
+					<textarea style="width:100%; min-height:5em;" id="ex1_in"></textarea><br />
+					<small><strong>Unterstützte Befehle</strong>: add, addu, addi, addiu, sub, subu, and, andi, or, ori, nor, xor, xori, slt, sltu, sltiu, sll, sllv, srl, sra, srlv, j, jr, jal, beq, bne, lw, sw, lui, mfhi, mflo, mthi, mtlo</small>
+					<button class="button" id="ex1_go">Kodieren</button>
+					<button class="button" id="ex1_reset">Zurücksetzen</button>
+				</p>
+			</div>
+			<div class="span6">
+				Assembly
+				<pre class="prettyprint linenums" id="ex1_ass"></pre>
+				Binary:
+				<pre class="prettyprint linenums" id="ex1_bin"></pre>
+			</div>
+			<script type="text/javascript">
+				$("#ex1_go").click(function() {
+					var lines = $("#ex1_in").val().split("\n");
+					var mem = new InstructionMemory();
+					for(var i = 0; i < lines.length; i++) {
+						$("#ex1_ass").append(lines[i] + "\n");
 
+						// group by bytes and octets
+						var bit_vector = mem.decode(lines[i])
+						var binary_code = ""
+						for(var j = 0; j < bit_vector.length; j++) {
+							binary_code = binary_code + bit_vector[j]
+							if ((j+1) % 4 == 0) {
+								binary_code = binary_code + " "
+							}
+						}
+						$("#ex1_bin").append(binary_code + "\n");
+					}
+				})
+				$("#ex1_reset").click(function() {
+					$("#ex1_ass").text("");
+					$("#ex1_bin").text("");
+				})
+			</script>
+		</div>
+	</div>
+
+	
 	<script type="text/javascript" src="Clock.js"></script>
 	<script type="text/javascript" src="Wire.js"></script>
 	<script type="text/javascript" src="InstructionMemory.js"></script>
+
 </body>
 </html>

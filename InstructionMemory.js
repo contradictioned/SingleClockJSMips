@@ -24,6 +24,10 @@ InstructionMemory.prototype.exec = function() {
 	var bitVector = this.decode(this.instructions[current]);
 }
 
+InstructionMemory.prototype.load = function(text) {
+	
+}
+
 /**
  * Translates a MIPS assembly code into an bitstring where instruction is an Bitvektor
  *
@@ -64,9 +68,9 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// add $rd, $rs, $rt  --  $rd <- $rs + $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,0,0,0,0]; // 32
 			break;
@@ -74,9 +78,9 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// add $rd, $rs, $rt  --  $rd <- $rs + $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,0,0,0,1]; // 33
 			break;
@@ -84,25 +88,25 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// add $rt, $rs, immediate  --  $rt <- $rs + immediate
 			this.type = "I";
 			var opcode = [0,0,1,0,0,0]; // 8
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		case "addiu":
 			// add $rt, $rs, immediate  --  $rt <- $rs + immediate
 			this.type = "I";
 			var opcode = [0,0,1,0,0,1]; // 9
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		case "sub":
 			// sub $rd, $rs, $rt  --  $rd <- $rs - $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,0,0,1,0]; // 34
 			break;
@@ -110,9 +114,9 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// sub $rd, $rs, $rt  --  $rd <- $rs - $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,0,0,1,1]; // 35
 			break;
@@ -121,9 +125,9 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// and $rd, $rs, $rt  --  $rd <- $rs & $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,0,1,0,0]; // 36
 			break;
@@ -131,17 +135,17 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// andi $rt, $rs, immediate  --  $rt <- $rs & immediate
 			this.type = "I";
 			var opcode = [0,0,1,1,0,0]; // 12
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		case "or":
 			// or $rd, $rs, $rt  --  $rd <- $rs | $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,0,1,0,1]; // 37
 			break;
@@ -149,17 +153,17 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// ori $rt, $rs, immediate  --  $rt <- $rs | immediate
 			this.type = "I";
 			var opcode = [0,0,1,1,0,1]; // 13
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		case "nor":
 			// nor $rd, $rs, $rt  --  $rd <- !($rs | $rt)
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,0,1,1,1]; // 39
 			break;
@@ -167,9 +171,9 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// xor $rd, $rs, $rt  --  $rd <- $rs ⊻ $rt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,0,1,1,0]; // 38
 			break;
@@ -177,18 +181,18 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// xori $rt, $rs, immediate  --  $rt <- $rs ⊻ immediate
 			this.type = "I";
 			var opcode = [0,0,1,1,1,0]; // 14
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		// Comparison ////////////////////////
 		case "slt":
 			// slt $rd, $rs, $rt  --  $rd = $rs < $rt ? 1 : 0
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,1,0,1,0];
 			break;
@@ -196,9 +200,9 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// sltu $rd, $rs, $rt  --  $rd = $rs < $rt ? 1 : 0
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg3);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg3);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [1,0,1,0,1,1];
 			break;
@@ -206,17 +210,17 @@ InstructionMemory.prototype.decode = function(instruction) {
 		  // slti $rt, $rs, immediate -- $rt = $rs < immediate ? 1 : 0
 			this.type = "I";
 			var opcode = [0,0,1,0,1,0]; // 10
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		case "sltiu":
 			// slti $rt, $rs, immediate -- $rt = $rs < immediate ? 1 : 0
 			this.type = "I";
 			var opcode = [0,0,1,0,1,1]; // 11
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		// Shift ////////////////////////
 		case "sll":
@@ -224,8 +228,8 @@ InstructionMemory.prototype.decode = function(instruction) {
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
 			var rs = [0,0,0,0,0];
-			var rt = decodeRegister(reg2);
-			var rd = decodeRegister(reg1);
+			var rt = this.decodeRegister(reg2);
+			var rd = this.decodeRegister(reg1);
 			var shamt = decodeShamt(rest);
 			var funct = [0,0,0,0,0,0];
 			break;
@@ -233,9 +237,9 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// sll $rd, $rt, $rs -- $rd <- $rt << $rs
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0]
-			var rs = decodeRegister(reg3);
-			var rt = decodeRegister(reg2);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg3);
+			var rt = this.decodeRegister(reg2);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [0,0,0,1,0,0]; // 4
 			break;
@@ -243,8 +247,8 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// srl $rd, $rt, shamt -- $rd = $rt >> shamt
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rt = decodeRegister(reg2);
-			var rd = decodeRegister(reg1);
+			var rt = this.decodeRegister(reg2);
+			var rd = this.decodeRegister(reg1);
 			var shamt =decodeShamt(rest);
 			var funct = [0,0,0,0,1,0]; // 2
 			break;
@@ -253,8 +257,8 @@ InstructionMemory.prototype.decode = function(instruction) {
 			this.type = "R";
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rt = decodeRegister(reg2);
-			var rd = decodeRegister(reg1);
+			var rt = this.decodeRegister(reg2);
+			var rd = this.decodeRegister(reg1);
 			var shamt =decodeShamt(rest);
 			var funct = [0,0,0,0,1,1]; // 3
 			break;
@@ -262,9 +266,9 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// srlv $rd, $rt, $rs -- $rd <- $rt >> $rs
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0]
-			var rs = decodeRegister(reg3);
-			var rt = decodeRegister(reg2);
-			var rd = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg3);
+			var rt = this.decodeRegister(reg2);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [0,0,0,1,1,0]; // 6
 			break;
@@ -279,7 +283,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// jr $rs -- goto $rs
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg1);
 			var rt = [0,0,0,0,0];
 			var rd = [0,0,0,0,0];
 			var shamt = [0,0,0,0,0];
@@ -295,42 +299,42 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// beq $rs, $rt, immediate -- if $rs = $rt goto immediate * 4
 			this.type = "I";
 			var opcode = [0,0,0,1,0,0]; // 4
-			var rs = decodeRegister(reg1);
-			var rt = decodeRegister(reg2);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg1);
+			var rt = this.decodeRegister(reg2);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		case "bne":
 			// beq $rs, $rt, immediate -- if $rs != $rt goto immediate * 4
 			this.type = "I";
 			var opcode = [0,0,0,1,0,1]; // 5
-			var rs = decodeRegister(reg1);
-			var rt = decodeRegister(reg2);
-			var immediate = decodeImmediate(rest);
+			var rs = this.decodeRegister(reg1);
+			var rt = this.decodeRegister(reg2);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		// Data transport ////////////////////////
 		case "lw":
 			// lw $rt, immediate($rs) -- $rt <- MEM[$rs + immediate]
 			this.type = "I";
 			var opcode = [1,0,0,0,1,1]; // 35
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(ls_offset);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(ls_offset);
 			break;
 		case "sw":
 			// sw $rt, immediate($rs) -- MEM[$rs + immediate] <- $rt
 			this.type = "I";
 			var opcode = [1,0,1,0,1,1]; // 43
-			var rs = decodeRegister(reg2);
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(ls_offset);
+			var rs = this.decodeRegister(reg2);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(ls_offset);
 			break;
 		case "lui":
 		  // lui $rt, immediate -- $rt <- immediate << 16
 			this.type = "I";
 			var opcode = [0,0,1,1,1,1];
 			var rs = [0,0,0,0,0];
-			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediate(rest);
+			var rt = this.decodeRegister(reg1);
+			var immediate = this.decodeImmediate(rest);
 			break;
 		case "mfhi":
 			// mfhi $rd -- $rd <- HI
@@ -338,7 +342,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var opcode = [0,0,0,0,0,0];
 			var rs = [0,0,0,0,0];
 			var rt = [0,0,0,0,0];
-			var rd = decodeRegister(reg1);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [0,1,0,0,0,0]; // 16
 			break;
@@ -348,7 +352,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var opcode = [0,0,0,0,0,0];
 			var rs = [0,0,0,0,0];
 			var rt = [0,0,0,0,0];
-			var rd = decodeRegister(reg1);
+			var rd = this.decodeRegister(reg1);
 			var shamt = [0,0,0,0,0];
 			var funct = [0,1,0,0,1,0]; // 18
 			break;
@@ -356,7 +360,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// mthi $rs -- HI <- $rs
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg1);
 			var rt = [0,0,0,0,0];
 			var rd = [0,0,0,0,0];
 			var shamt = [0,0,0,0,0];
@@ -366,7 +370,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			// mtlo $rs -- LO <- $rs
 			this.type = "R";
 			var opcode = [0,0,0,0,0,0];
-			var rs = decodeRegister(reg1);
+			var rs = this.decodeRegister(reg1);
 			var rt = [0,0,0,0,0];
 			var rd = [0,0,0,0,0];
 			var shamt = [0,0,0,0,0];
@@ -374,13 +378,33 @@ InstructionMemory.prototype.decode = function(instruction) {
 			break;
 	}
 
+	// now build the resulting bitvector according to the type
+	switch(this.type) {
+		case "R":
+			this.binaryCode = opcode.concat(rs).concat(rt).concat(rd).concat(shamt).concat(funct);
+			break;
+		case "I":
+			this.binaryCode = opcode.concat(rs).concat(rt).concat(immediate);
+			break;
+		case "J":
+			this.binaryCode = opcode.concat(target);
+			break;
+	}
+
+	// another validty check
+	if (this.binaryCode.length != 32) {
+		throw "Tried to decode `" + instruction + "` but binary length was not 32 but " + this.binaryCode.length;
+	}
+
+	return this.binaryCode;
+
 }
 
 /**
  * 
  */
 InstructionMemory.prototype.decodeShamt = function(shamt) {
-	var bitVector = shamt.toString(2).split("");
+	var bitVector = parseInt(shamt).toString(2).split("");
 
 	while(bitVector.length < 5) {
 		bitVector = [0].concat(bitVector);
@@ -397,7 +421,7 @@ InstructionMemory.prototype.decodeShamt = function(shamt) {
  *
  */
 InstructionMemory.prototype.decodeImmediate = function(immediate) {
-	var bitVector = immediate.toString(2).split("");
+	var bitVector = parseInt(immediate).toString(2).split("");
 
 	while(bitVector.length < 16) {
 		bitVector = [0].concat(bitVector);
@@ -414,7 +438,7 @@ InstructionMemory.prototype.decodeImmediate = function(immediate) {
  *
  */
 InstructionMemory.prototype.decodeTarget = function(immediate) {
-	var bitVector = immediate.toString(2).split("");
+	var bitVector = parseInt(immediate).toString(2).split("");
 	
 	while(bitVector.length < 26) {
 		bitVector = [0].concat(bitVector);
@@ -432,7 +456,7 @@ InstructionMemory.prototype.decodeTarget = function(immediate) {
  * returns an bitvector.
  */
 InstructionMemory.prototype.decodeRegister = function(register) {
-  switch(reg) {
+  switch(register) {
 		case "$0":
 		case "$zero":
 			return [0,0,0,0,0];
@@ -562,5 +586,5 @@ InstructionMemory.prototype.decodeRegister = function(register) {
 			return [1,1,1,1,1];
 			break;
   }
-  throw "Register name " + reg + " not known."
+  throw "Register name " + register + " not known."
 }
