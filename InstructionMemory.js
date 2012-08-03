@@ -1,5 +1,6 @@
 /**
  * Modellierung des Befehlsspeichers, hier nur als ganz einfaches Array von Strings, das eben abgearbeitet wird.
+ * Fürs bessere Verständnis sind die Befehle im Assemblercode hinterlegt und werden hier erst übersetzt.
  */
 
 /**
@@ -37,10 +38,15 @@ InstructionMemory.prototype.decode = function(instruction) {
 		var reg1 = rest.slice(0, rest.indexOf(','));
 		rest = rest.slice(rest.indexOf(' ') + 1);
 	}
-	if(rest.indexOf(',') != -1) {
+	// either we have a pair of brackets (LW, SW) or not
+	if(rest.indexOf(',') != -1 && rest.indexOf('(') == -1) {
 		var reg2 = rest.slice(0, rest.indexOf(','));
 		rest = rest.slice(rest.indexOf(' ') + 1);
+	} else if (rest.indexOf(',') != -1 && rest.indexOf('(') != -1) {
+		var ls_offset = rest.slice(0, rest.indexOf('('));
+		var reg2 = rest.slice(rest.indexOf('(') + 1, rest.indexOf(')'));
 	}
+
 	if(rest.indexOf('$') != -1) {
 		var reg3 = rest;
 		rest = undefined;
@@ -210,7 +216,7 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var opcode = [0,0,1,0,1,1]; // 11
 			var rs = decodeRegister(reg2);
 			var rt = decodeRegister(reg1);
-			var immediate = decodeImmediaterest);
+			var immediate = decodeImmediate(rest);
 			break;
 		// Shift ////////////////////////
 		case "sll":
@@ -304,25 +310,19 @@ InstructionMemory.prototype.decode = function(instruction) {
 		// Data transport ////////////////////////
 		case "lw":
 			// lw $rt, immediate($rs) -- $rt <- MEM[$rs + immediate]
-			// TODO 
 			this.type = "I";
 			var opcode = [1,0,0,0,1,1]; // 35
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = decodeImmediate(ls_offset);
 			break;
 		case "sw":
 			// sw $rt, immediate($rs) -- MEM[$rs + immediate] <- $rt
-			// TODO
 			this.type = "I";
 			var opcode = [1,0,1,0,1,1]; // 43
-			var rs;
-			var rt;
-			var rd;
-			var shamt;
-			var funct;
+			var rs = decodeRegister(reg2);
+			var rt = decodeRegister(reg1);
+			var immediate = decodeImmediate(ls_offset);
 			break;
 		case "lui":
 		  // lui $rt, immediate -- $rt <- immediate << 16
@@ -376,19 +376,55 @@ InstructionMemory.prototype.decode = function(instruction) {
 
 }
 
+/**
+ * 
+ */
 InstructionMemory.prototype.decodeShamt = function(shamt) {
-	var bitVector = shamt.toString(2);
-	bitVector.split("");
+	var bitVector = shamt.toString(2).split("");
+
+	while(bitVector.length < 5) {
+		bitVector = [0].concat(bitVector);
+	}
+
+	if(bitVector.length != 5){
+		throw "Shift amount length has to be 5 bits, but actual length is " + bitVector.length;
+	}
+
+	return bitVector
 }
 
+/**
+ *
+ */
 InstructionMemory.prototype.decodeImmediate = function(immediate) {
-	var bitVector = immediate.toString(2);
-	bitVector.split("");
+	var bitVector = immediate.toString(2).split("");
+
+	while(bitVector.length < 16) {
+		bitVector = [0].concat(bitVector);
+	}
+
+	if(bitVector.length != 16){
+		throw "Immediate length has to be 16 bits, but actual length is " + bitVector.length;
+	}
+
+	return bitVector;
 }
 
+/**
+ *
+ */
 InstructionMemory.prototype.decodeTarget = function(immediate) {
-	var bitVector = immediate.toString(2);
-	bitVector.split("");
+	var bitVector = immediate.toString(2).split("");
+	
+	while(bitVector.length < 26) {
+		bitVector = [0].concat(bitVector);
+	}
+
+	if(bitVector.length != 26) {
+		throw "Target length has to be 26 bits, but actual length is " + bitVector.length;
+	}
+
+	return bitVector;
 }
 
 /**
@@ -526,4 +562,5 @@ InstructionMemory.prototype.decodeRegister = function(register) {
 			return [1,1,1,1,1];
 			break;
   }
+  throw "Register name " + reg + " not known."
 }
