@@ -21,11 +21,13 @@ function InstructionMemory(instructionArray, offset) {
 }
 
 InstructionMemory.prototype.exec = function() {
-	var bitVector = this.decode(this.instructions[current]);
+	var bitVector = this.decode(this.instructions[this.current]);
+	this.outWire.receive(bitVector)
+
 }
 
-InstructionMemory.prototype.load = function(text) {
-	
+InstructionMemory.prototype.push = function(text) {
+	this.instructions.push(text)
 }
 
 /**
@@ -376,6 +378,8 @@ InstructionMemory.prototype.decode = function(instruction) {
 			var shamt = [0,0,0,0,0];
 			var funct = [0,1,0,0,1,1]; // 19
 			break;
+		default:
+			throw "Instruction not supported."
 	}
 
 	// now build the resulting bitvector according to the type

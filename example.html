@@ -8,6 +8,7 @@
   <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="lib/jcanvas.min.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -20,7 +21,8 @@
 				<p class="well">
 					Hier MIPS-Assembler eingeben:<br />
 					<textarea style="width:100%; min-height:5em;" id="ex1_in"></textarea><br />
-					<small><strong>Unterstützte Befehle</strong>: add, addu, addi, addiu, sub, subu, and, andi, or, ori, nor, xor, xori, slt, sltu, sltiu, sll, sllv, srl, sra, srlv, j, jr, jal, beq, bne, lw, sw, lui, mfhi, mflo, mthi, mtlo</small>
+					<small><strong>Unterstützte Befehle</strong>: add, addu, addi, addiu, sub, subu, and, andi, or, ori, nor, xor, xori, slt, sltu, sltiu, sll, sllv, srl, sra, srlv, j, jr, jal, beq, bne, lw, sw, lui, mfhi, mflo, mthi, mtlo<br />
+					Keine Kommentare :(</small><br />
 					<button class="button" id="ex1_go">Kodieren</button>
 					<button class="button" id="ex1_reset">Zurücksetzen</button>
 				</p>
@@ -56,12 +58,32 @@
 				})
 			</script>
 		</div>
+		<div class="row">
+			<h2>Visualisierungsexperiment</h2>
+			<div class="span12">
+				<canvas id="ex2" style="width:100%, height:600px;"></canvas>
+				<button class="button" id="ex2_start">CPU laden</button>
+				<script type="text/javascript">
+					$("#ex2_start").click(function() {
+						
+						// Instructionfetch
+						$("#ex2").drawRect({
+							strokeStyle: "black",
+							strokeWidth: "1px",
+							x: 50, y:50,
+							width: 50, height: 50
+						})
+					})
+				</script>
+			</div>
+		</div>
 	</div>
 
 	
 	<script type="text/javascript" src="Clock.js"></script>
 	<script type="text/javascript" src="Wire.js"></script>
 	<script type="text/javascript" src="InstructionMemory.js"></script>
+	<script type="text/javascript" src="SingleClockMips.js"></script>
 
 </body>
 </html>
