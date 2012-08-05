@@ -8,14 +8,20 @@ function Wire() {
 
 Wire.prototype.receive = function(currentData) {
 	this.currentData = currentData;
+	
 	for (var i = 0; i < this.receivers.length; i++) {
-		this.receivers.comp.send(currentData.slice(this.receivers.startIndex, this.receivers.endIndex));
+		var receiver = this.receivers[i];
+		if(receiver.startIndex && receiver.endIndex) {
+			currentData = currentData.slice(receiver.startIndex, receiver.endIndex+1)
+		}
+		
+		receiver.comp[receiver.funct].call(receiver.comp, currentData);
 	}
 }
 
 /**
  * 
  */
-Wire.prototype.addReceiver = function(component, startIndex, endIndex) {
-	receivers.push({comp: component, startIndex: startIndex, endIndex: endIndex})
+Wire.prototype.addReceiver = function(component, funct, startIndex, endIndex) {
+	this.receivers.push({comp: component, startIndex: startIndex, funct: funct, endIndex: endIndex})
 }

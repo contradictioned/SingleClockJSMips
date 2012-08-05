@@ -57,12 +57,6 @@ InstructionMemory.prototype.decode = function(instruction) {
 		var reg3 = rest;
 		rest = undefined;
 	}
-	console.log("instr: " + instr);
-	console.log("reg1: " + reg1);
-	console.log("reg2: " + reg2);
-	console.log("reg3: " + reg3);
-	console.log("rest: " + rest);
-
 	
 	switch(instr){
 		// Arithmetics ////////////////////////
