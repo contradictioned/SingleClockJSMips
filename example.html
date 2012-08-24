@@ -9,6 +9,16 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript" src="lib/jcanvas.min.js"></script>
+
+	<script type="text/javascript">
+		function display_error(dom_node, message) {
+			var msg = '<div class="alert alert-error"">' +
+					  '  <button class="close" data-dismiss="alert">×</button>' +
+					  '  <strong>Obacht!</strong> ' + message +
+					  '</div>';
+			$(dom_node).prepend(msg)
+		}
+	</script>
 </head>
 <body>
 	<div class="container">
@@ -27,7 +37,9 @@
 					<button class="button" id="ex1_reset">Zurücksetzen</button>
 				</p>
 			</div>
-			<div class="span6">
+			<div class="span6" id="ex1_row">
+				
+
 				Assembly
 				<pre class="prettyprint linenums" id="ex1_ass"></pre>
 				Binary:
@@ -37,19 +49,23 @@
 				$("#ex1_go").click(function() {
 					var lines = $("#ex1_in").val().split("\n");
 					var mem = new InstructionMemory();
-					for(var i = 0; i < lines.length; i++) {
-						$("#ex1_ass").append(lines[i] + "\n");
+					try {
+						for(var i = 0; i < lines.length; i++) {
+							$("#ex1_ass").append(lines[i] + "\n");
 
-						// group by bytes and octets
-						var bit_vector = mem.decode(lines[i])
-						var binary_code = ""
-						for(var j = 0; j < bit_vector.length; j++) {
-							binary_code = binary_code + bit_vector[j]
-							if ((j+1) % 4 == 0) {
-								binary_code = binary_code + " "
+							// group by bytes and octets
+							var bit_vector = mem.decode(lines[i])
+							var binary_code = ""
+							for(var j = 0; j < bit_vector.length; j++) {
+								binary_code = binary_code + bit_vector[j]
+								if ((j+1) % 4 == 0) {
+									binary_code = binary_code + " "
+								}
 							}
+							$("#ex1_bin").append(binary_code + "\n");
 						}
-						$("#ex1_bin").append(binary_code + "\n");
+					} catch (e) {
+						display_error("#ex1_row", e)
 					}
 				})
 				$("#ex1_reset").click(function() {
@@ -58,11 +74,152 @@
 				})
 			</script>
 		</div>
+
+		<div class="row">
+			<h2>Komponentenbelegung</h2>
+
+			<div class="span12">
+				<div class="row">
+					<p>Hier wird ein gegebenes Assemblerprogramm durchgegangen.</p>
+					<button class="button" id="ex2_start">Anfangen</button>
+					<button class="button" id="ex2_reset">Zurücksetzen</button>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<h2>Befehlsspeicher</h2>
+						<pre>
+							add $
+						</pre>
+					</div>
+					<div class="span6">
+						<h2>Registersatz</h2>
+						Register und deren Inhalt
+						<table class="table table-striped table-bordered table-condensed">
+							<tr>
+								<th>$0 / $zero</th>
+								<td id="reg0"></td>
+								<th>$16 / $s0</th>
+								<td id="reg16"></td>
+							</tr>
+							<tr>
+								<th>$1 / $at</th>
+								<td id="reg1"></td>
+								<th>$17 / $s1</th>
+								<td id="reg17"></td>
+							</tr>
+							<tr>
+								<th>$2 / $v0</th>
+								<td id="reg2"></td>
+								<th>$18 / $s2</th>
+								<td id="reg18"></td>
+							</tr>
+							<tr>
+								<th>$3 / $v1</th>
+								<td id="reg3"></td>
+								<th>$19 / $s3</th>
+								<td id="reg19"></td>
+							</tr>
+							<tr>
+								<th>$4 / $a0</th>
+								<td id="reg4"></td>
+								<th>$20 / $s4</th>
+								<td id="reg20"></td>
+							</tr>
+							<tr>
+								<th>$5 / $a1</th>
+								<td id="reg5"></td>
+								<th>$21 / $s5</th>
+								<td id="reg21"></td>
+							</tr>
+							<tr>
+								<th>$6 / $a2</th>
+								<td id="reg6"></td>
+								<th>$22 / $s6</th>
+								<td id="reg22"></td>
+							</tr>
+							<tr>
+								<th>$7 / $a3</th>
+								<td id="reg7"></td>
+								<th>$23 / $s7</th>
+								<td id="reg23"></td>
+							</tr>
+							<tr>
+								<th>$8 / $t0</th>
+								<td id="reg8"></td>
+								<th>$24 / $t8</th>
+								<td id="reg24"></td>
+							</tr>
+							<tr>
+								<th>$9 / $t1</th>
+								<td id="reg9"></td>
+								<th>$25 / $t9</th>
+								<td id="reg25"></td>
+							</tr>
+							<tr>
+								<th>$10 / $t2</th>
+								<td id="reg10"></td>
+								<th>$26 / $k0</th>
+								<td id="reg26"></td>
+							</tr>
+							<tr>
+								<th>$11 / $t3</th>
+								<td id="reg11"></td>
+								<th>$27 / $k1</th>
+								<td id="reg27"></td>
+							</tr>
+							<tr>
+								<th>$12 / $t4</th>
+								<td id="reg12"></td>
+								<th>$28 / $gp</th>
+								<td id="reg28"></td>
+							</tr>
+							<tr>
+								<th>$13 / $t5</th>
+								<td id="reg13"></td>
+								<th>$29 / $sp</th>
+								<td id="reg29"></td>
+							</tr>
+							<tr>
+								<th>$14 / $t6</th>
+								<td id="reg14"></td>
+								<th>$30 / $fp</th>
+								<td id="reg30"></td>
+							</tr>
+							<tr>
+								<th>$15 / $t7</th>
+								<td id="reg15"></td>
+								<th>$31 / $ra</th>
+								<td id="reg31"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+		$(function() {
+			$("#ex2_start").click(function() {
+				global.instructionMemory.push("add $t1, $t3, $t4");
+				global.instructionMemory.push("add $t1, $t3, $t4");
+				global.instructionMemory.push("add $t1, $t3, $t4");
+				global.instructionMemory.push("add $t1, $t3, $t4");
+				global.instructionMemory.push("add $t1, $t3, $t4");
+				initializeRegisters();
+			});
+		});
+
+		function initializeRegisters() {
+			for(var i = 0; i < 31; i++) {
+				$("#reg" + i).html(global.registerSet.registers[i]);
+			}
+		}
+		</script>
+
 		<div class="row">
 			<h2>Visualisierungsexperiment</h2>
 			<div class="span12">
-				<canvas id="ex2" style="width:100%, height:600px;"></canvas>
-				<button class="button" id="ex2_start">CPU laden</button>
+				<canvas id="ex3" style="width:100%, height:600px;"></canvas>
+				<button class="button" id="ex3_start">CPU laden</button>
 				<script type="text/javascript">
 					$("#ex2_start").click(function() {
 						
@@ -73,6 +230,8 @@
 							x: 50, y:50,
 							width: 50, height: 50
 						})
+
+						$("")
 					})
 				</script>
 			</div>
