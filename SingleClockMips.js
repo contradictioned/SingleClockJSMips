@@ -13,14 +13,14 @@ global.aluCtrl = new AluCtrl();
 global.memory = new Memory();
 global.control = new Control();
 
-global.instRegMulti = new Multiplexer();
+global.instRegMulti = new Multiplexer(5);
 global.regAluMulti = new Multiplexer();
 global.memRegMulti = new Multiplexer();
 global.branchMulti = new Multiplexer();
 global.jumpMulti = new Multiplexer();
 
-global.jumpShift = new Shift();
-global.immediateShift = new Shift();
+global.jumpShift = new Shift(2);
+global.immediateShift = new Shift(2);
 
 global.signExt = new SignExt();
 global.pcInc = new Adder();
@@ -139,7 +139,7 @@ aluOutWire.addReceiver(global.memRegMulti, "receive0");
 
 var aluZeroWire = new Wire();
 global.alu.zeroWire = aluZeroWire;
-zeroWire.addReceiver(global.andGate, "receive1");
+aluZeroWire.addReceiver(global.andGate, "receive1");
 
 var branchMultiWire = new Wire();
 global.andGate.outWire = branchMultiWire;
@@ -204,8 +204,3 @@ jumpWire.addReceiver(global.jumpMulti, "receive0")
 var pcWire = new Wire();
 global.jumpMulti.outWire = pcWire;
 pcWire.addReceiver(global.programCounter, "receive")
-
-
-// mocks
-//global.instructionMemory.push("add $7, $1, $3");
-//global.instructionMemory.exec();
