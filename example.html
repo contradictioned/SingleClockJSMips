@@ -21,6 +21,7 @@
 	</script>
 
 	<script type="text/javascript" src="helpers.js"></script>
+	<script type="text/javascript" src="BitVector.js"></script>
 	<script type="text/javascript" src="Clock.js"></script>
 	<script type="text/javascript" src="AluCtrl.js"></script>
 	<script type="text/javascript" src="Memory.js"></script>
@@ -62,7 +63,7 @@
 			<div class="span6" id="ex1_row">
 				
 
-				Assembly
+				Assembler:
 				<pre class="prettyprint linenums" id="ex1_ass"></pre>
 				Binary:
 				<pre class="prettyprint linenums" id="ex1_bin"></pre>
@@ -101,71 +102,88 @@
 		<div class="row">
 			<h2>ALU</h2>
 
-			<div class="span8">
+			<div class="row">
+				<div class="span6">
+					<p>
+							Die Eingabeoperanden für die ALU. Für nicht kommutative Operationen ist die Semantik <em>Op0 - Op1</em>. Leider funktionieren bisher nur vorzeichenlose Zahlen :(
+					</p>
 
-			</div>
-
-			<div class="span6">
-				<div class="input-prepend input-append">
-					<span class="add-on">Op0</span>
-					<input type="text"></input>
-					<span class="add-on">
-						<sub id="ex2_op0_enc">10</sub>
-					</span>
-					<span class="btn-group">
-            <button class="btn dropdown-toggle" data-toggle="dropdown">Codierung <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#" id="ex2_op0_enc2">Binär</a></li>
-              <li><a href="#" id="ex2_op0_enc10">Dezimal</a></li>
-              <li><a href="#" id="ex2_op0_enc16">Hexadezimal</a></li>
-            </ul>
-          </span>
-				</div>
-
-				<div class="input-prepend input-append">
-					<span class="add-on">Op0</span>
-					<input type="text"></input>
-					<span class="add-on">
-						<sub id="ex2_op1_enc">10</sub>
-					</span>
-					<span class="btn-group">
-            <button class="btn dropdown-toggle" data-toggle="dropdown">Codierung <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#" id="ex2_op1_enc2">Binär</a></li>
-              <li><a href="#" id="ex2_op1_enc10">Dezimal</a></li>
-              <li><a href="#" id="ex2_op1_enc16">Hexadezimal</a></li>
-            </ul>
-          </span>
-				</div>
-			</div>
-			
-			<div class="span6">
-				<p>
-					Steuereingang: <input type="text" class="input-mini" id="ex2_ctrl_input">
-
-					<div class="btn-group" data-toggle="buttons-radio">
-					  <button type="button" class="btn btnarith" id="ex2_ctrl_add">add</button>
-					  <button type="button" class="btn btnarith" id="ex2_ctrl_sub">sub</button>
-					  <button type="button" class="btn btnarith" id="ex2_ctrl_eq">equals</button>
-					  <button type="button" class="btn btnarith" id="ex2_ctrl_lt">less than</button>
-					</div><br />
-
-					<div class="btn-group" data-toggle="buttons-radio">
-					  <button type="button" class="btn btnlogic" id="ex2_ctrl_and">and</button>
-					  <button type="button" class="btn btnlogic" id="ex2_ctrl_or">or</button>
-					  <button type="button" class="btn btnlogic" id="ex2_ctrl_andn">and not</button>
-					  <button type="button" class="btn btnlogic" id="ex2_ctrl_orn">or not</button>
+					<div class="input-prepend input-append">
+						<span class="add-on">Op0</span>
+						<input type="text"></input>
+						<span class="add-on">
+							<sub id="ex2_op0_enc">10</sub>
+						</span>
+						<span class="btn-group">
+	            <button class="btn dropdown-toggle" data-toggle="dropdown">Codierung <span class="caret"></span></button>
+	            <ul class="dropdown-menu">
+	              <li><a href="#" id="ex2_op0_enc2">Binär</a></li>
+	              <li><a href="#" id="ex2_op0_enc10">Dezimal</a></li>
+	              <li><a href="#" id="ex2_op0_enc16">Hexadezimal</a></li>
+	            </ul>
+	          </span>
 					</div>
-				</p>
+
+					<div class="input-prepend input-append">
+						<span class="add-on">Op0</span>
+						<input type="text"></input>
+						<span class="add-on">
+							<sub id="ex2_op1_enc">10</sub>
+						</span>
+						<span class="btn-group">
+	            <button class="btn dropdown-toggle" data-toggle="dropdown">Codierung <span class="caret"></span></button>
+	            <ul class="dropdown-menu">
+	              <li><a href="#" id="ex2_op1_enc2">Binär</a></li>
+	              <li><a href="#" id="ex2_op1_enc10">Dezimal</a></li>
+	              <li><a href="#" id="ex2_op1_enc16">Hexadezimal</a></li>
+	            </ul>
+	          </span>
+					</div>
+				</div>
+				
+				<div class="span6">
+					<p>
+						Steuereingang: <input type="text" class="input-mini" id="ex2_ctrl_input" value="010" />
+						Der 3bit Steuereingang, der von ALUCtrl aus kommt, bestimmt die Operation, die die ALU ausführt (Script S. 211).
+						<div class="btn-group" data-toggle="buttons-radio">
+						  <button type="button" class="btn btnarith" id="ex2_ctrl_add">add</button>
+						  <button type="button" class="btn btnarith" id="ex2_ctrl_sub">sub</button>
+						  <button type="button" class="btn btnarith" id="ex2_ctrl_eq">equals</button>
+						  <button type="button" class="btn btnarith" id="ex2_ctrl_lt">less than</button>
+						</div><br />
+
+						<div class="btn-group" data-toggle="buttons-radio">
+						  <button type="button" class="btn btnlogic" id="ex2_ctrl_and">and</button>
+						  <button type="button" class="btn btnlogic" id="ex2_ctrl_or">or</button>
+						  <button type="button" class="btn btnlogic" id="ex2_ctrl_andn">and not</button>
+						  <button type="button" class="btn btnlogic" id="ex2_ctrl_orn">or not</button>
+						</div>
+					</p>
+				</div>
 			</div>
-			
+
+			<div class="row">
+				<div class="span2">
+					 <button class="btn btn-large btn-inverse" type="button" id="ex2_exec">Berechnen</button>
+				</div>
+				<div class="span8">
+					<strong>Ergebnis (Berechnung | Null): </strong><pre class="prettyprint linenums" id="ex2_res"></pre>
+				</div>
+			</div>
 
 			<script type="text/javascript">
 				var ex2 = {}
 				ex2.alu = new ALU();
 				ex2.op0_enc = 10;
 				ex2.op1_enc = 10;
-				ex2.ctrl = [0,0,0]
+				ex2.ctrl = [0,1,0]
+
+				// mock the output wires for the alu
+				ex2.alu.outWire = {}
+				ex2.alu.zeroWire = {}
+				ex2.alu.outWire.receive = function(op) { $("#ex2_res").html(op) };
+				ex2.alu.zeroWire.receive = function(op) { $("#ex2_res").append(' |' + op) };
+
 
 				$("#ex2_op0_enc2").click(function() {
 					ex2.op0_enc = 2
@@ -194,8 +212,15 @@
 				})
 
 				// controll
+				/**
+				 * Wenn mal jemand Lust hat, könnte man ja auch
+				 * den Input parsen...
+				 */
+				$("#ex2_ctrl_input").prop('disabled', true);
+
+				$("#ex2_ctrl_add").button('toggle')
 				$("#ex2_ctrl_add").click(function() {
-					ex2.ctrl = [1,0,0]
+					ex2.ctrl = [0,1,0]
 					$(".btnlogic").removeClass('active')
 					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
 				})
@@ -215,24 +240,34 @@
 					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
 				})
 				$("#ex2_ctrl_and").click(function() {
-					ex2.ctrl = [1,0,0]
+					ex2.ctrl = [0,0,0]
 					$(".btnarith").removeClass('active')
 					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
 				})
 				$("#ex2_ctrl_or").click(function() {
-					ex2.ctrl = [1,1,0]
+					ex2.ctrl = [0,0,1]
 					$(".btnarith").removeClass('active')
 					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
 				})
 				$("#ex2_ctrl_andn").click(function() {
-					ex2.ctrl = [1,1,0]
+					ex2.ctrl = [1,0,0]
 					$(".btnarith").removeClass('active')
 					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
 				})
 				$("#ex2_ctrl_orn").click(function() {
-					ex2.ctrl = [1,1,1]
+					ex2.ctrl = [1,0,1]
 					$(".btnarith").removeClass('active')
 					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+
+				$("#ex2_exec").click(function() {
+
+
+					ex2.op0 = [0,1,1,0];
+					ex2.op1 = [1,0,0,0];
+					ex2.alu.receiveOp0(ex2.op0);
+					ex2.alu.receiveOp1(ex2.op1);
+					ex2.alu.receiveCtrl(ex2.ctrl);
 				})
 
 			</script>
