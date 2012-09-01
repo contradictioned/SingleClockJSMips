@@ -19,12 +19,34 @@
 			$(dom_node).prepend(msg)
 		}
 	</script>
+
+	<script type="text/javascript" src="helpers.js"></script>
+	<script type="text/javascript" src="Clock.js"></script>
+	<script type="text/javascript" src="AluCtrl.js"></script>
+	<script type="text/javascript" src="Memory.js"></script>
+	<script type="text/javascript" src="SignExt.js"></script>
+	<script type="text/javascript" src="Adder.js"></script>
+	<script type="text/javascript" src="AndGate.js"></script>
+	<script type="text/javascript" src="ConstGate.js"></script>
+	<script type="text/javascript" src="Join.js"></script>
+	<script type="text/javascript" src="Multiplexer.js"></script>
+	<script type="text/javascript" src="ProgramCounter.js"></script>
+	<script type="text/javascript" src="Control.js"></script>
+	<script type="text/javascript" src="Shift.js"></script>
+	<script type="text/javascript" src="Wire.js"></script>
+	<script type="text/javascript" src="InstructionMemory.js"></script>
+	<script type="text/javascript" src="RegisterSet.js"></script>
+	<script type="text/javascript" src="ALU.js"></script>
+	<script type="text/javascript" src="Multiplexer.js"></script>
+	<script type="text/javascript" src="SingleClockMips.js"></script>
 </head>
 <body>
 	<div class="container">
 		<div class="page-header">
 			<h1>Mini-MIPS Spielwiese</h1>
 		</div>
+
+
 		<div class="row">
 			<h2>Assembler in Bitstrings/Bitvektoren</h2>
 			<div class="span6">
@@ -73,191 +95,167 @@
 					$("#ex1_bin").text("");
 				})
 			</script>
-		</div>
+		</div><!-- ENDE beispiel1 -->
+
 
 		<div class="row">
-			<h2>Komponentenbelegung</h2>
+			<h2>ALU</h2>
 
-			<div class="span12">
-				<div class="row">
-					<p>Hier wird ein gegebenes Assemblerprogramm durchgegangen.</p>
-					<button class="button" id="ex2_start">Anfangen</button>
-					<button class="button" id="ex2_reset">Zurücksetzen</button>
+			<div class="span8">
+
+			</div>
+
+			<div class="span6">
+				<div class="input-prepend input-append">
+					<span class="add-on">Op0</span>
+					<input type="text"></input>
+					<span class="add-on">
+						<sub id="ex2_op0_enc">10</sub>
+					</span>
+					<span class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">Codierung <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#" id="ex2_op0_enc2">Binär</a></li>
+              <li><a href="#" id="ex2_op0_enc10">Dezimal</a></li>
+              <li><a href="#" id="ex2_op0_enc16">Hexadezimal</a></li>
+            </ul>
+          </span>
 				</div>
-				<div class="row">
-					<div class="span6">
-						<h2>Befehlsspeicher</h2>
-						<pre>
-							add $
-						</pre>
-					</div>
-					<div class="span6">
-						<h2>Registersatz</h2>
-						Register und deren Inhalt
-						<table class="table table-striped table-bordered table-condensed">
-							<tr>
-								<th>$0 / $zero</th>
-								<td id="reg0"></td>
-								<th>$16 / $s0</th>
-								<td id="reg16"></td>
-							</tr>
-							<tr>
-								<th>$1 / $at</th>
-								<td id="reg1"></td>
-								<th>$17 / $s1</th>
-								<td id="reg17"></td>
-							</tr>
-							<tr>
-								<th>$2 / $v0</th>
-								<td id="reg2"></td>
-								<th>$18 / $s2</th>
-								<td id="reg18"></td>
-							</tr>
-							<tr>
-								<th>$3 / $v1</th>
-								<td id="reg3"></td>
-								<th>$19 / $s3</th>
-								<td id="reg19"></td>
-							</tr>
-							<tr>
-								<th>$4 / $a0</th>
-								<td id="reg4"></td>
-								<th>$20 / $s4</th>
-								<td id="reg20"></td>
-							</tr>
-							<tr>
-								<th>$5 / $a1</th>
-								<td id="reg5"></td>
-								<th>$21 / $s5</th>
-								<td id="reg21"></td>
-							</tr>
-							<tr>
-								<th>$6 / $a2</th>
-								<td id="reg6"></td>
-								<th>$22 / $s6</th>
-								<td id="reg22"></td>
-							</tr>
-							<tr>
-								<th>$7 / $a3</th>
-								<td id="reg7"></td>
-								<th>$23 / $s7</th>
-								<td id="reg23"></td>
-							</tr>
-							<tr>
-								<th>$8 / $t0</th>
-								<td id="reg8"></td>
-								<th>$24 / $t8</th>
-								<td id="reg24"></td>
-							</tr>
-							<tr>
-								<th>$9 / $t1</th>
-								<td id="reg9"></td>
-								<th>$25 / $t9</th>
-								<td id="reg25"></td>
-							</tr>
-							<tr>
-								<th>$10 / $t2</th>
-								<td id="reg10"></td>
-								<th>$26 / $k0</th>
-								<td id="reg26"></td>
-							</tr>
-							<tr>
-								<th>$11 / $t3</th>
-								<td id="reg11"></td>
-								<th>$27 / $k1</th>
-								<td id="reg27"></td>
-							</tr>
-							<tr>
-								<th>$12 / $t4</th>
-								<td id="reg12"></td>
-								<th>$28 / $gp</th>
-								<td id="reg28"></td>
-							</tr>
-							<tr>
-								<th>$13 / $t5</th>
-								<td id="reg13"></td>
-								<th>$29 / $sp</th>
-								<td id="reg29"></td>
-							</tr>
-							<tr>
-								<th>$14 / $t6</th>
-								<td id="reg14"></td>
-								<th>$30 / $fp</th>
-								<td id="reg30"></td>
-							</tr>
-							<tr>
-								<th>$15 / $t7</th>
-								<td id="reg15"></td>
-								<th>$31 / $ra</th>
-								<td id="reg31"></td>
-							</tr>
-						</table>
-					</div>
+
+				<div class="input-prepend input-append">
+					<span class="add-on">Op0</span>
+					<input type="text"></input>
+					<span class="add-on">
+						<sub id="ex2_op1_enc">10</sub>
+					</span>
+					<span class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">Codierung <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#" id="ex2_op1_enc2">Binär</a></li>
+              <li><a href="#" id="ex2_op1_enc10">Dezimal</a></li>
+              <li><a href="#" id="ex2_op1_enc16">Hexadezimal</a></li>
+            </ul>
+          </span>
 				</div>
 			</div>
-		</div>
-		<script type="text/javascript">
-		$(function() {
-			$("#ex2_start").click(function() {
-				global.instructionMemory.push("add $t1, $t3, $t4");
-				global.instructionMemory.push("add $t1, $t3, $t4");
-				global.instructionMemory.push("add $t1, $t3, $t4");
-				global.instructionMemory.push("add $t1, $t3, $t4");
-				global.instructionMemory.push("add $t1, $t3, $t4");
-				initializeRegisters();
-			});
-		});
+			
+			<div class="span6">
+				<p>
+					Steuereingang: <input type="text" class="input-mini" id="ex2_ctrl_input">
 
-		function initializeRegisters() {
-			for(var i = 0; i < 31; i++) {
-				$("#reg" + i).html(global.registerSet.registers[i]);
-			}
-		}
-		</script>
+					<div class="btn-group" data-toggle="buttons-radio">
+					  <button type="button" class="btn btnarith" id="ex2_ctrl_add">add</button>
+					  <button type="button" class="btn btnarith" id="ex2_ctrl_sub">sub</button>
+					  <button type="button" class="btn btnarith" id="ex2_ctrl_eq">equals</button>
+					  <button type="button" class="btn btnarith" id="ex2_ctrl_lt">less than</button>
+					</div><br />
 
-		<div class="row">
-			<h2>Visualisierungsexperiment</h2>
-			<div class="span12">
-				<canvas id="ex3" style="width:100%, height:600px;"></canvas>
-				<button class="button" id="ex3_start">CPU laden</button>
-				<script type="text/javascript">
-					$("#ex2_start").click(function() {
-						
-						// Instructionfetch
-						$("#ex2").drawRect({
-							strokeStyle: "black",
-							strokeWidth: "1px",
-							x: 50, y:50,
-							width: 50, height: 50
-						})
-
-						$("")
-					})
-				</script>
+					<div class="btn-group" data-toggle="buttons-radio">
+					  <button type="button" class="btn btnlogic" id="ex2_ctrl_and">and</button>
+					  <button type="button" class="btn btnlogic" id="ex2_ctrl_or">or</button>
+					  <button type="button" class="btn btnlogic" id="ex2_ctrl_andn">and not</button>
+					  <button type="button" class="btn btnlogic" id="ex2_ctrl_orn">or not</button>
+					</div>
+				</p>
 			</div>
-		</div>
-	</div>
+			
+
+			<script type="text/javascript">
+				var ex2 = {}
+				ex2.alu = new ALU();
+				ex2.op0_enc = 10;
+				ex2.op1_enc = 10;
+				ex2.ctrl = [0,0,0]
+
+				$("#ex2_op0_enc2").click(function() {
+					ex2.op0_enc = 2
+					$("#ex2_op0_enc").html(ex2.op0_enc)
+				})
+				$("#ex2_op0_enc10").click(function() {
+					ex2.op0_enc = 10
+					$("#ex2_op0_enc").html(ex2.op0_enc)
+				})
+				$("#ex2_op0_enc16").click(function() {
+					ex2.op0_enc = 16
+					$("#ex2_op0_enc").html(ex2.op0_enc)
+				})
+
+				$("#ex2_op1_enc2").click(function() {
+					ex2.op1_enc = 2
+					$("#ex2_op1_enc").html(ex2.op1_enc)
+				})
+				$("#ex2_op1_enc10").click(function() {
+					ex2.op1_enc = 10
+					$("#ex2_op1_enc").html(ex2.op1_enc)
+				})
+				$("#ex2_op1_enc16").click(function() {
+					ex2.op1_enc = 16
+					$("#ex2_op1_enc").html(ex2.op1_enc)
+				})
+
+				// controll
+				$("#ex2_ctrl_add").click(function() {
+					ex2.ctrl = [1,0,0]
+					$(".btnlogic").removeClass('active')
+					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+				$("#ex2_ctrl_sub").click(function() {
+					ex2.ctrl = [1,1,0]
+					$(".btnlogic").removeClass('active')
+					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+				$("#ex2_ctrl_eq").click(function() {
+					ex2.ctrl = [1,1,0]
+					$(".btnlogic").removeClass('active')
+					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+				$("#ex2_ctrl_lt").click(function() {
+					ex2.ctrl = [1,1,1]
+					$(".btnlogic").removeClass('active')
+					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+				$("#ex2_ctrl_and").click(function() {
+					ex2.ctrl = [1,0,0]
+					$(".btnarith").removeClass('active')
+					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+				$("#ex2_ctrl_or").click(function() {
+					ex2.ctrl = [1,1,0]
+					$(".btnarith").removeClass('active')
+					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+				$("#ex2_ctrl_andn").click(function() {
+					ex2.ctrl = [1,1,0]
+					$(".btnarith").removeClass('active')
+					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+				$("#ex2_ctrl_orn").click(function() {
+					ex2.ctrl = [1,1,1]
+					$(".btnarith").removeClass('active')
+					$("#ex2_ctrl_input").val(ex2.ctrl.join(""))
+				})
+
+			</script>
+		</div><!-- -->
+
+	</div><!-- ENDE header div-->
 
 	
-	<script type="text/javascript" src="helpers.js"></script>
-	<script type="text/javascript" src="Clock.js"></script>
-	<script type="text/javascript" src="AluCtrl.js"></script>
-	<script type="text/javascript" src="Memory.js"></script>
-	<script type="text/javascript" src="SignExt.js"></script>
-	<script type="text/javascript" src="Adder.js"></script>
-	<script type="text/javascript" src="AndGate.js"></script>
-	<script type="text/javascript" src="ConstGate.js"></script>
-	<script type="text/javascript" src="Join.js"></script>
-	<script type="text/javascript" src="Multiplexer.js"></script>
-	<script type="text/javascript" src="ProgramCounter.js"></script>
-	<script type="text/javascript" src="Control.js"></script>
-	<script type="text/javascript" src="Shift.js"></script>
-	<script type="text/javascript" src="Wire.js"></script>
-	<script type="text/javascript" src="InstructionMemory.js"></script>
-	<script type="text/javascript" src="RegisterSet.js"></script>
-	<script type="text/javascript" src="ALU.js"></script>
-	<script type="text/javascript" src="Multiplexer.js"></script>
-	<script type="text/javascript" src="SingleClockMips.js"></script>
+
+  <!-- Template für einzelne Beispiele
+  <div class="row">
+			<h2>[Überschrift]</h2>
+			
+			
+
+			<script type="text/javascript">
+			
+				[Scripts für dieses Beispiel]
+
+			</script>
+		</div>
+  -->
+
 
 </body>
 </html>
