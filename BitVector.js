@@ -18,11 +18,20 @@
    * new Bitvector("8231") – interpretes the string as a decimal number
    * new Bitvector("0x8231") – interpretes the string as a hexacedicmal number
    * new Bitvector(5634) – interpretes the integer as a decimal number
+ * 
+ * Also options = {base: int, length: int} can be provided
  */
-function BitVector(number) {
+function BitVector(number, options) {
 	this.arr = [];
 	// case 1: the number is given as array
 	if(number instanceof Array) {
+		for(var i = 0; i < number.length; i++) {
+			if(!(number[i] == 0 || number[i] == 1)) {
+				throw "BitVector(array) expects array of {0,1}"
+			} else {
+				number[i] = parseInt(number[i])
+			}
+		}
 		this.arr = number;
 	}
 
@@ -46,24 +55,55 @@ function BitVector(number) {
  * 
  * options = {base: int, length: int}
  */
-function BitVector(number, options) {
-	this.arr = []
-
-}
 
 
 
 /********************** Tests ************************/
 tests = []
 function testBitVector() {
+	var count = 0;
 	for(var i = 0; i < tests.length; i++) {
-		tests[i]()
+		count = count + tests[i]()
 	}
+	console.log("Tests are finished, non errors in: " + count + " of " + tests.length)
 }
 
+// bitvector from array with {0,1} should be built
 tests.push(function() {
-	console.log("as")
+	var right = [0,1,1,0]
+	return 1;
 })
+
+// bitvector from array with {0,1,x} should not be built
 tests.push(function() {
-	console.log("df")
+	var wrong = [0,1,2,0]
+	try {
+		new BitVector(wrong);
+	} catch(e) {
+		return 1;
+	}
+	throw "BitVector() accepted array with a 2 in it"
+})
+
+// bitvector from array with {"0", "1"} should be built
+tests.push(function() {
+	var right = [0,1,"1","0"]
+	return 1;
+})
+
+// bitvector from array with {"0", "1", "x"} should not be built
+tests.push(function() {
+	var wrong1 = [0,1,"",0]
+	var wrong2 = [0,1,"one",0]
+	var wrong3 = [0,1,"2",0]
+	var wrong4 = [0,1,"a",0]
+	try {
+		new BitVector(wrong1);
+		new BitVector(wrong2);
+		new BitVector(wrong3);
+		new BitVector(wrong4);
+	} catch(e) {
+		return 1;
+	}
+	throw "BitVector() accepted array with a invalid char in it"
 })

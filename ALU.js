@@ -6,6 +6,7 @@ function ALU() {
 	this.outWire = undefined;
 	this.zeroWire = undefined;
 
+	this.result = undefined;
 	this.actionCounter = 0;
 }
 
@@ -43,7 +44,18 @@ ALU.prototype.next = function() {
 	}
 
 	console.log("ALU is doing serious busines.")
+	console.log(this)
 
+	switch(this.ctrl.join("")) {
+		case "000":
+			this.and();
+			break;
+		case "001":
+			this.or();
+			break;
+	}
+
+	this.actionCounter = 0;
 }
 
 /**
@@ -51,7 +63,11 @@ ALU.prototype.next = function() {
  * sent the logical "and" of the two operands.
  */
 ALU.prototype.and = function() {
-
+	this.result = new Array(32);
+	for(var i = 0; i < 31; i++) {
+		this.result[i] = Math.min(this.op0[i], this.op1[i])
+	}
+	this.outWire.receive(this.result);
 }
 
 /**
@@ -59,7 +75,11 @@ ALU.prototype.and = function() {
  * sent the logical "or" of the two operands.
  */
 ALU.prototype.or = function() {
-	
+	var result = new Array(32);
+	for(var i = 0; i < 31; i++) {
+		result[i] = Math.max(this.op0[i], this.op1[i])
+	}
+	this.outWire.receive(result);
 }
 
 /**
@@ -67,7 +87,11 @@ ALU.prototype.or = function() {
  * sent the sum of the two operands.
  */
 ALU.prototype.add = function() {
-	
+	// just cheating :)
+	var op0int = bitVectorToValue(op0);
+	var op1int = bitVectorToValue(op1)
+	var result = (op0 + op1).toString(0).split('');
+	this.outWire.receive(result);
 }
 
 /**
@@ -90,13 +114,27 @@ ALU.prototype.orn = function() {
  * is sent accordingly.
  */
 ALU.prototype.sub = function() {
-	
+	// just cheating :)
+	var op0int = bitVectorToValue(op0);
+	var op1int = bitVectorToValue(op1)
+	var result = (op0 - op1).toString(0).split('');
+	this.outWire.receive(result);	
 }
 
 /**
  * On this.ctrl == [1,1,1] this.outWire is
- * sent [0,..,0,1]
+ * sent [0,..,0,1] if op0 < op1,
+ * else [0,...,0]
  */
 ALU.prototype.lt = function() {
+	// just cheating :)
+	var op0int = bitVectorToValue(op0);
+	var op1int = bitVectorToValue(op1)
+	if(op0int < op1int) {
+		var result = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+	} else {
+		var result = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+	}
 	
+	this.outWire.receive(result);
 }
