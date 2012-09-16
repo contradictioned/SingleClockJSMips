@@ -31,6 +31,10 @@ global.andGate = new AndGate();
 global.theFour = new ConstGate(4);
 
 
+global.clock = new Clock()
+global.clock.register(global.instructionMemory)
+global.clock.register(global.theFour)
+
 // Kabel, das aus dem Befehlsspeicher herausführt, Breite: 32 bit.
 // Die Sortierung ist ein wenig bescheiden (anders als im Script).
 // 

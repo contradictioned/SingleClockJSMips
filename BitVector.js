@@ -6,6 +6,16 @@
  * could use another internal representation.
  * The class is designed to be instanciated with several input types, see the
  * constructors.
+ *
+ * Internal Representation:
+ * The BitVector is internally represented by an array as follows:
+ * this.arr = [lsb, lsb+1, ..., msb-1, msb]
+ * Therefore an input is encoded 'backwards' but can be accessed naturally as
+ * array index = power of 2.
+ * Example: 7 (base 10) = 0111 (base 2)
+ *  => var bitvec = new BitVector(7);
+ *     bitvec.get(0) // == 1
+ *     bitvec.get(3) // == 0
  */
 
 /**
@@ -19,7 +29,7 @@
    * new Bitvector("0x8231") – interpretes the string as a hexacedicmal number
    * new Bitvector(5634) – interpretes the integer as a decimal number
  * 
- * Also options = {base: int, length: int} can be provided
+ * Also options = {length: int} can be provided
  */
 function BitVector(number, options) {
 	this.arr = [];
@@ -32,31 +42,76 @@ function BitVector(number, options) {
 				number[i] = parseInt(number[i])
 			}
 		}
-		this.arr = number;
+		this.arr = number.reverse();
 	}
 
 	// case 2: the number is given as string
 	// the javascript function parseInt detects the prefix 0x for hexadecimal
 	if(typeof number == "string") {
-		this.arr = parseInt(number).toString(2).split('');
+		this.arr = parseInt(number).toString(2).split('').reverse();
 	}
 	
 	// case 3: the number is given as integer
   if(typeof number == "number") {
-  	this.arr = number.toString(2).split('');
+  	this.arr = number.toString(2).split('').reverse();
+  }
+
+  if(options && options.size) {
+  	// controlled ditch
+  	if(options.size < this.arr.size) {
+  		throw "The value of the BitVector is too big to fit in the requested size."
+  	}
+  }
+}
+
+
+/**
+ * Checks for equality of BitVectors.
+ * If the two BitVectors don't have the same lenght, they are considered unequal.
+ */
+BitVector.prototype.equals = function(op) {
+  if(op instanceof BitVector) {
+  	if(op.length() != this.length()) {
+  		return false;
+  	}
+  	for(var i = 0; i < this.length; i++) {
+  		if(op.get(i) != this.get(i)) {
+  			return false;
+  		}
+  	}
+  	return true;
+
+  } else { // op is not a BitVector
+  	return this.equals(new BitVector(op));
   }
 }
 
 /**
- * This constructor takes also an object of options. The first parameter is the
- * number like in the constructor above.
- * The second parameter provides hints how the number has to be interpreted or
- * how the BitVector has to be built.
- * 
- * options = {base: int, length: int}
+ * Returns the size of this BitVector
  */
+BitVector.prototype.length = function() {
+	return this.arr.length;
+}
 
+/**
+ * Returns the BitVector as a string, MSB first, LSB last. i.e.:
+ * new BitVector([0,1,0,1]) => "0101"
+ */
+BitVector.prototype.toString = function() {
+  var res = ""
+  for(var i = 0; i < this.arr.length; i++) {
+  	res = this.get(i) + res;
+  }
+  return res;
+}
 
+/**
+ * Gets element No index from the BitVector.
+ * get(LSB) = get(0)
+ */
+BitVector.prototype.get = function(index) {
+	return this.arr[index];
+}
 
 /********************** Tests ************************/
 tests = []

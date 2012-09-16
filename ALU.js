@@ -1,8 +1,10 @@
 function ALU() {
+	// BitVector
 	this.op0 = undefined;
 	this.op1 = undefined;
 	this.ctrl = undefined;
 
+	// Wire
 	this.outWire = undefined;
 	this.zeroWire = undefined;
 
@@ -11,7 +13,7 @@ function ALU() {
 }
 
 ALU.prototype.receiveOp0 = function(op) {
-	if(op.length != 32) {
+	if(op.length() != 32) {
 		throw "ALU input not valid."
 	}
 	
@@ -20,7 +22,7 @@ ALU.prototype.receiveOp0 = function(op) {
 }
 
 ALU.prototype.receiveOp1 = function(op) {
-	if(op.length != 32) {
+	if(op.length() != 32) {
 		throw "ALU input not valid."
 	}
 
@@ -29,7 +31,7 @@ ALU.prototype.receiveOp1 = function(op) {
 }
 
 ALU.prototype.receiveCtrl = function(op) {
-	if(op.length != 3 || op == [0,1,1]) {
+	if(op.length() != 3 || op.equals([0,1,1])) {
 		throw "ALU control input not valid"
 	}
 
@@ -46,7 +48,7 @@ ALU.prototype.next = function() {
 	console.log("ALU is doing serious busines.")
 	console.log(this)
 
-	switch(this.ctrl.join("")) {
+	switch(this.ctrl.toString()) {
 		case "000":
 			this.and();
 			break;
@@ -63,11 +65,11 @@ ALU.prototype.next = function() {
  * sent the logical "and" of the two operands.
  */
 ALU.prototype.and = function() {
-	this.result = new Array(32);
+	this.result = "";
 	for(var i = 0; i < 31; i++) {
-		this.result[i] = Math.min(this.op0[i], this.op1[i])
+		this.result = Math.min(this.op0.get(i), this.op1.get(i)) + this.result;
 	}
-	this.outWire.receive(this.result);
+	this.outWire.receive(new BitVector(this.result));
 }
 
 /**
@@ -75,11 +77,11 @@ ALU.prototype.and = function() {
  * sent the logical "or" of the two operands.
  */
 ALU.prototype.or = function() {
-	var result = new Array(32);
+	this.result = "";
 	for(var i = 0; i < 31; i++) {
-		result[i] = Math.max(this.op0[i], this.op1[i])
+		this.result = Math.max(this.op0.get(i), this.op1.get(i)) + this.result;
 	}
-	this.outWire.receive(result);
+	this.outWire.receive(new BitVector(this.result));
 }
 
 /**
