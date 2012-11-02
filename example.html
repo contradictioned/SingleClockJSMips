@@ -176,7 +176,7 @@
 				ex2.alu = new ALU();
 				ex2.op0_enc = 10;
 				ex2.op1_enc = 10;
-				ex2.ctrl = [0,1,0]
+				ex2.ctrl = [0,1,0];
 
 				// mock the output wires for the alu
 				ex2.alu.outWire = {};
@@ -273,8 +273,9 @@
 						rawOp1 = [0].concat(rawOp1)
 					}
 
-					ex2.op0 = rawOp0
-					ex2.op1 = rawOp1
+					ex2.op0 = new BitVector(rawOp0);
+					ex2.op1 = new BitVector(rawOp1);
+					ex2.ctrl = new BitVector(ex2.ctrl)
 					ex2.alu.receiveOp0(ex2.op0);
 					ex2.alu.receiveOp1(ex2.op1);
 					ex2.alu.receiveCtrl(ex2.ctrl);

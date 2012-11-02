@@ -14,6 +14,7 @@ function ALU() {
 
 ALU.prototype.receiveOp0 = function(op) {
 	if(op.length() != 32) {
+		console.log(op)
 		throw "ALU input not valid."
 	}
 	
@@ -23,6 +24,7 @@ ALU.prototype.receiveOp0 = function(op) {
 
 ALU.prototype.receiveOp1 = function(op) {
 	if(op.length() != 32) {
+		console.log(op)
 		throw "ALU input not valid."
 	}
 
@@ -31,7 +33,8 @@ ALU.prototype.receiveOp1 = function(op) {
 }
 
 ALU.prototype.receiveCtrl = function(op) {
-	if(op.length() != 3 || op.equals([0,1,1])) {
+	if((op.length() != 3) || (op.equals([0,1,1]))) {
+		console.log(op)
 		throw "ALU control input not valid"
 	}
 
@@ -54,6 +57,12 @@ ALU.prototype.next = function() {
 			break;
 		case "001":
 			this.or();
+			break;
+		case "010":
+			this.add();
+			break;
+		case "110":
+			this.sub();
 			break;
 	}
 
@@ -90,9 +99,9 @@ ALU.prototype.or = function() {
  */
 ALU.prototype.add = function() {
 	// just cheating :)
-	var op0int = bitVectorToValue(op0);
-	var op1int = bitVectorToValue(op1)
-	var result = (op0 + op1).toString(0).split('');
+	var op0int = this.op0.toInt();
+	var op1int = this.op1.toInt();
+	var result = (op0int + op1int).toString(2).split('');
 	this.outWire.receive(result);
 }
 
@@ -117,10 +126,10 @@ ALU.prototype.orn = function() {
  */
 ALU.prototype.sub = function() {
 	// just cheating :)
-	var op0int = bitVectorToValue(op0);
-	var op1int = bitVectorToValue(op1)
-	var result = (op0 - op1).toString(0).split('');
-	this.outWire.receive(result);	
+	var op0int = this.op0.toInt();
+	var op1int = this.op1.toInt();
+	var result = (op0int - op1int).toString(2).split('');
+	this.outWire.receive(result);
 }
 
 /**

@@ -71,15 +71,15 @@ function BitVector(number, options) {
  */
 BitVector.prototype.equals = function(op) {
   if(op instanceof BitVector) {
-  	if(op.length() != this.length()) {
-  		return false;
-  	}
-  	for(var i = 0; i < this.length; i++) {
-  		if(op.get(i) != this.get(i)) {
-  			return false;
-  		}
-  	}
-  	return true;
+	if(op.length() != this.length()) {
+		return false;
+	}
+	for(var i = 0; i < this.length(); i++) {
+		if(op.get(i) != this.get(i)) {
+			return false;
+		}
+	}
+	return true;
 
   } else { // op is not a BitVector
   	return this.equals(new BitVector(op));
@@ -112,6 +112,18 @@ BitVector.prototype.toString = function() {
 BitVector.prototype.get = function(index) {
 	return this.arr[index];
 }
+
+/**
+ * Returns the integer value of the Bitvector
+ */
+BitVector.prototype.toInt = function() {
+	var value = 0;
+	for(var i = 0; i < this.length(); i++) {
+		value = value + this.get(i) * Math.pow(2,i)
+	}
+	return value;
+}
+
 
 /********************** Tests ************************/
 tests = []
