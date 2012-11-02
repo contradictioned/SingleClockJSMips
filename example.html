@@ -25,20 +25,20 @@
 	<script type="text/javascript" src="Clock.js"></script>
 	<script type="text/javascript" src="AluCtrl.js"></script>
 	<script type="text/javascript" src="Memory.js"></script>
-	<script type="text/javascript" src="SignExt.js"></script>
-	<script type="text/javascript" src="Adder.js"></script>
-	<script type="text/javascript" src="AndGate.js"></script>
-	<script type="text/javascript" src="ConstGate.js"></script>
+	<script type="text/javascript" src="circuits/SignExt.js"></script>
+	<script type="text/javascript" src="circuits/Adder.js"></script>
+	<script type="text/javascript" src="circuits/AndGate.js"></script>
+	<script type="text/javascript" src="circuits/ConstGate.js"></script>
 	<script type="text/javascript" src="Join.js"></script>
-	<script type="text/javascript" src="Multiplexer.js"></script>
+	<script type="text/javascript" src="circuits/Multiplexer.js"></script>
 	<script type="text/javascript" src="ProgramCounter.js"></script>
 	<script type="text/javascript" src="Control.js"></script>
-	<script type="text/javascript" src="Shift.js"></script>
+	<script type="text/javascript" src="circuits/Shift.js"></script>
 	<script type="text/javascript" src="Wire.js"></script>
 	<script type="text/javascript" src="InstructionMemory.js"></script>
 	<script type="text/javascript" src="RegisterSet.js"></script>
 	<script type="text/javascript" src="ALU.js"></script>
-	<script type="text/javascript" src="Multiplexer.js"></script>
+	<script type="text/javascript" src="circuits/Multiplexer.js"></script>
 	<script type="text/javascript" src="SingleClockMips.js"></script>
 </head>
 <body>
@@ -284,19 +284,30 @@
 			</script>
 		</div><!-- -->
 
-	</div><!-- ENDE header div-->
-
-	
-
-  <!-- Template für einzelne Beispiele
-  <div class="row">
-			<h2>[Überschrift]</h2>
-			
-			
+		<div class="row">
+			<h2>Befehlsspeicher</h2>
+				
+			<p>Der Befehlsspeicher bietet Zugriff auf den Speicher wie folgt: Im vorherigen Takt kam ein Befehlsindex, der sogenannte <strong>Program Counter</strong> auf der Eingangsleitung. Der Befehlsspeicher holt sich ab diesem Index 32 bit aus dem Speicher und schickt diese 32 Bit dann auf seine Ausgansleitung.</p>
 
 			<script type="text/javascript">
-			
-				[Scripts für dieses Beispiel]
+				
+					[Scripts für dieses Beispiel]
+
+			</script>
+		</div>
+
+	</div><!-- ENDE header div-->
+	  
+
+  <!-- Template für einzelne Beispiele
+	  <div class="row">
+			<h2>[Überschrift]</h2>
+				
+				
+
+			<script type="text/javascript">
+				
+					[Scripts für dieses Beispiel]
 
 			</script>
 		</div>
